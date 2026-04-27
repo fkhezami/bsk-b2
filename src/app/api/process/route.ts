@@ -35,8 +35,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: "No unprocessed images found" });
   }
 
-  let vocabOrder = 0;
-  let grammarOrder = 0;
+  // Start order counters after existing items so batched processing never collides
+  const [{ data: maxVocab }, { data: maxGrammar }] = await Promise.all([
+    supabase.from("flashcards").select("display_order").eq("course_id", courseId).order("display_order", { ascending: false }).limit(1).maybeSingle(),
+    supabase.from("grammar_notes").select("display_order").eq("course_id", courseId).order("display_order", { ascending: false }).limit(1).maybeSingle(),
+  ]);
+
+  let vocabOrder = maxVocab ? maxVocab.display_order + 1 : 0;
+  let grammarOrder = maxGrammar ? maxGrammar.display_order + 1 : 0;
   const results: { imageId: string; type: string; count: number }[] = [];
 
   for (const image of images) {

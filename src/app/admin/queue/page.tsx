@@ -21,15 +21,16 @@ export default async function QueuePage() {
   const { data: imageCounts } = courseIds.length
     ? await supabase
         .from("images")
-        .select("course_id, processed")
+        .select("course_id, processed, type")
         .in("course_id", courseIds)
     : { data: [] };
 
-  const countMap: Record<string, { total: number; unprocessed: number }> = {};
+  const countMap: Record<string, { total: number; unprocessed: number; failed: number }> = {};
   for (const row of imageCounts ?? []) {
-    if (!countMap[row.course_id]) countMap[row.course_id] = { total: 0, unprocessed: 0 };
+    if (!countMap[row.course_id]) countMap[row.course_id] = { total: 0, unprocessed: 0, failed: 0 };
     countMap[row.course_id].total += 1;
     if (!row.processed) countMap[row.course_id].unprocessed += 1;
+    if (row.processed && row.type === "unknown") countMap[row.course_id].failed += 1;
   }
 
   return (
@@ -44,7 +45,7 @@ export default async function QueuePage() {
       ) : (
         <div className="space-y-3">
           {courses.map((course) => {
-            const counts = countMap[course.id] ?? { total: 0, unprocessed: 0 };
+            const counts = countMap[course.id] ?? { total: 0, unprocessed: 0, failed: 0 };
             return (
               <div
                 key={course.id}
@@ -67,6 +68,11 @@ export default async function QueuePage() {
                     {counts.unprocessed > 0 && (
                       <span className="text-amber-600 font-medium">
                         {counts.unprocessed} unprocessed
+                      </span>
+                    )}
+                    {counts.failed > 0 && (
+                      <span className="text-red-500 font-medium">
+                        {counts.failed} failed
                       </span>
                     )}
                   </div>
