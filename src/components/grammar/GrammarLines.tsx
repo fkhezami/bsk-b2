@@ -14,22 +14,25 @@ interface Line {
 }
 
 function parseLine(raw: string): Line {
+  // Strip leading list markers (-, *, •, numbers) before tag parsing
+  const stripped = raw.replace(/^[-*•]\s*/, "").replace(/^\d+[.)]\s*/, "");
+
   // Match [type] or [type|color] — allow spaces around the pipe, any non-bracket chars
-  const m = raw.match(/^\[\s*([^\]|]+?)\s*(?:\|\s*([^\]]+?)\s*)?\]\s*/);
+  const m = stripped.match(/^\[\s*([^\]|]+?)\s*(?:\|\s*([^\]]+?)\s*)?\]\s*/);
   if (m) {
     return {
       type:  m[1].toLowerCase(),
       color: m[2]?.toLowerCase() ?? null,
-      text:  raw.slice(m[0].length),
+      text:  stripped.slice(m[0].length),
     };
   }
   // Legacy prefixes without color
-  if (/^\[rule\]/i.test(raw))    return { type: "bullet",  color: null, text: raw.replace(/^\[rule\]\s*/i, "") };
-  if (/^\[special\]/i.test(raw)) return { type: "special", color: null, text: raw.replace(/^\[special\]\s*/i, "") };
-  if (/^\[example\]/i.test(raw)) return { type: "example", color: null, text: raw.replace(/^\[example\]\s*/i, "") };
-  if (/^\[extra\]/i.test(raw))   return { type: "extra",   color: null, text: raw.replace(/^\[extra\]\s*/i, "") };
-  // Plain line — strip leading dash or bullet if present
-  return { type: "bullet", color: null, text: raw.replace(/^[-•]\s*/, "") };
+  if (/^\[rule\]/i.test(stripped))    return { type: "bullet",  color: null, text: stripped.replace(/^\[rule\]\s*/i, "") };
+  if (/^\[special\]/i.test(stripped)) return { type: "special", color: null, text: stripped.replace(/^\[special\]\s*/i, "") };
+  if (/^\[example\]/i.test(stripped)) return { type: "example", color: null, text: stripped.replace(/^\[example\]\s*/i, "") };
+  if (/^\[extra\]/i.test(stripped))   return { type: "extra",   color: null, text: stripped.replace(/^\[extra\]\s*/i, "") };
+  // Plain line — use already-stripped version
+  return { type: "bullet", color: null, text: stripped };
 }
 
 const PALETTE: Record<string, { text: string; marker: string; bg: string; border: string }> = {

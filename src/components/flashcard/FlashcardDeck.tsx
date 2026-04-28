@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Flashcard } from "@/types";
 import { FlashcardItem } from "./FlashcardItem";
-import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface Props {
@@ -24,35 +23,45 @@ export function FlashcardDeck({ flashcards }: Props) {
   const next = () => { setFlipped(false); setIndex((i) => Math.min(flashcards.length - 1, i + 1)); };
 
   return (
-    <div className="flex flex-col items-center gap-6">
-      <p className="text-sm text-brand-400 font-medium">
-        {index + 1} <span className="text-brand-300">/ {flashcards.length}</span>
+    <div className="flex flex-col gap-2">
+      {/* Counter */}
+      <p className="text-center text-xs text-brand-400 font-medium tabular-nums">
+        {index + 1} <span className="text-brand-200">/</span> {flashcards.length}
       </p>
 
-      <FlashcardItem card={card} flipped={flipped} onFlip={() => setFlipped((f) => !f)} />
+      {/* Card + arrows */}
+      <div className="flex items-center gap-2">
+        <button
+          onClick={prev}
+          disabled={index === 0}
+          className="shrink-0 p-1.5 rounded-lg text-brand-300 hover:text-brand-700 disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
+        >
+          <ChevronLeft className="w-5 h-5" />
+        </button>
 
-      <div className="flex gap-3">
-        <Button variant="secondary" size="sm" onClick={prev} disabled={index === 0}>
-          <ChevronLeft className="w-4 h-4" />
-          Previous
-        </Button>
-        <Button variant="secondary" size="sm" onClick={next} disabled={index === flashcards.length - 1}>
-          Next
-          <ChevronRight className="w-4 h-4" />
-        </Button>
+        <div className="flex-1 min-w-0">
+          <FlashcardItem card={card} flipped={flipped} onFlip={() => setFlipped((f) => !f)} />
+        </div>
+
+        <button
+          onClick={next}
+          disabled={index === flashcards.length - 1}
+          className="shrink-0 p-1.5 rounded-lg text-brand-300 hover:text-brand-700 disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
+        >
+          <ChevronRight className="w-5 h-5" />
+        </button>
       </div>
 
-      {/* Dot navigation */}
-      <div className="flex gap-2 flex-wrap justify-center mt-1">
+      {/* Dots */}
+      <div className="flex gap-1.5 flex-wrap justify-center mt-1">
         {flashcards.map((_, i) => (
           <button
             key={i}
             onClick={() => { setIndex(i); setFlipped(false); }}
-            className="transition-all"
+            className="transition-all rounded-full"
             style={{
-              width: i === index ? "20px" : "8px",
-              height: "8px",
-              borderRadius: "9999px",
+              width: i === index ? "18px" : "7px",
+              height: "7px",
               background: i === index ? "#4f46e5" : "#c7d2fe",
             }}
           />

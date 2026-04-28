@@ -9,9 +9,10 @@ import { RetryButton } from "./RetryButton";
 import { DeleteFlashcardButton } from "./DeleteFlashcardButton";
 import { DeleteGrammarButton } from "./DeleteGrammarButton";
 import { DeduplicateButton } from "./DeduplicateButton";
+import { ReorganizeButton } from "./ReorganizeButton";
+import { FlashcardEditFields } from "./FlashcardEditFields";
+import { GrammarEditFields } from "./GrammarEditFields";
 import { ReorderControls } from "./ReorderControls";
-import { GrammarLines } from "@/components/grammar/GrammarLines";
-import { LangBadge } from "@/components/ui/LangBadge";
 import { ArrowLeft, BookOpen, Layers, AlertTriangle, ImageIcon } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -101,6 +102,7 @@ export default async function AdminCoursePage({ params }: { params: Promise<{ id
           {flashcards.length} flashcard{flashcards.length !== 1 ? "s" : ""} &middot; {grammarNotes.length} grammar note{grammarNotes.length !== 1 ? "s" : ""}
         </span>
         <DeduplicateButton courseId={course.id} />
+        <ReorganizeButton courseId={course.id} noteCount={grammarNotes.length} />
         {failedImages.length > 0 && (
           <RetryButton courseId={course.id} failedCount={failedImages.length} />
         )}
@@ -175,16 +177,7 @@ export default async function AdminCoursePage({ params }: { params: Promise<{ id
                               endpoint="/api/admin/flashcards/reorder"
                             />
                             <span className="text-blue-300 font-mono text-xs pt-0.5 w-5 shrink-0">{n}.</span>
-                            <div className="flex-1 min-w-0">
-                              <span className="font-semibold text-blue-800">{card.word_de}</span>
-                              <div className="flex flex-wrap gap-x-3 mt-0.5">
-                                <span className="flex items-center gap-1 text-blue-800 text-xs"><LangBadge lang="en" />{card.translation_en}</span>
-                                <span className="flex items-center gap-1 text-blue-800 text-xs"><LangBadge lang="uk" />{card.translation_uk}</span>
-                              </div>
-                              {card.example_de && (
-                                <p className="text-blue-400 text-xs italic mt-1">{card.example_de}</p>
-                              )}
-                            </div>
+                            <FlashcardEditFields card={card} />
                             <DeleteFlashcardButton id={card.id} />
                           </div>
                         );
@@ -207,16 +200,7 @@ export default async function AdminCoursePage({ params }: { params: Promise<{ id
                       </div>
                       <DeleteGrammarButton id={note.id} />
                     </div>
-                    <h3 className="font-bold text-red-700 text-base mb-2 ml-6">{note.title}</h3>
-                    <div className="ml-6 mb-3">
-                      <GrammarLines explanation={note.explanation} />
-                    </div>
-                    {note.structure && (
-                      <div className="bg-blue-50 rounded-lg px-3 py-2.5 border border-blue-100 ml-6">
-                        <p className="text-xs uppercase tracking-widest text-blue-400 mb-1">Struktur</p>
-                        <p className="font-mono text-sm text-blue-800">{note.structure}</p>
-                      </div>
-                    )}
+                    <GrammarEditFields note={note} />
                   </div>
                 ))}
               </div>
@@ -273,16 +257,7 @@ export default async function AdminCoursePage({ params }: { params: Promise<{ id
                 </div>
                 <DeleteGrammarButton id={note.id} />
               </div>
-              <h3 className="font-bold text-red-700 text-base mb-2 ml-6">{note.title}</h3>
-              <div className="ml-6 mb-3">
-                <GrammarLines explanation={note.explanation} />
-              </div>
-              {note.structure && (
-                <div className="bg-blue-50 rounded-lg px-3 py-2.5 border border-blue-100 ml-6">
-                  <p className="text-xs uppercase tracking-widest text-blue-400 mb-1">Struktur</p>
-                  <p className="font-mono text-sm text-blue-800">{note.structure}</p>
-                </div>
-              )}
+              <GrammarEditFields note={note} />
             </div>
           ))}
         </section>

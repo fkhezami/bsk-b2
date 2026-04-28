@@ -22,7 +22,7 @@ export function FlashcardItem({ card, flipped, onFlip }: Props) {
 
   return (
     <div
-      className="w-full max-w-md cursor-pointer px-1"
+      className="w-full cursor-pointer"
       style={{ perspective: "1000px" }}
       onClick={onFlip}
       role="button"
@@ -33,46 +33,44 @@ export function FlashcardItem({ card, flipped, onFlip }: Props) {
         style={{
           transformStyle: "preserve-3d",
           transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
-          height: "260px",
+          height: "148px",
         }}
       >
-        {/* Front — German word + article + gender */}
+        {/* Front */}
         <div
-          className="absolute inset-0 rounded-2xl bg-white shadow-lg flex flex-col items-center justify-center p-8 gap-2"
+          className="absolute inset-0 rounded-xl bg-white shadow-sm flex flex-col items-center justify-center px-5 gap-1"
           style={{ backfaceVisibility: "hidden", border: "1px solid #c7d2fe" }}
         >
-          <LangBadge lang="de" size={24} />
+          <LangBadge lang="de" size={18} />
 
           {article ? (
             <>
-              {/* Articles row */}
-              <div className="flex items-center gap-3 text-sm text-brand-400">
-                <span><span className="font-semibold text-brand-600">{article.definite}</span></span>
+              {/* Gender badge + articles on same row */}
+              <div className="flex items-center gap-2 text-xs mt-1">
+                {(() => {
+                  const gs = GENDER_STYLE[article.gender];
+                  return (
+                    <span className={cn("px-1.5 py-0.5 rounded-full text-xs font-semibold border", gs.bg, gs.text, gs.border)}>
+                      {article.label}
+                    </span>
+                  );
+                })()}
+                <span className="font-semibold text-brand-600">{article.definite}</span>
                 <span className="text-brand-200">·</span>
-                <span><span className="font-semibold text-brand-500">{article.indefinite}</span></span>
+                <span className="font-semibold text-brand-500">{article.indefinite}</span>
               </div>
-              {/* Bare word */}
-              <p className="text-3xl font-bold text-brand-950 text-center">{article.bare}</p>
-              {/* Gender badge */}
-              {(() => {
-                const gs = GENDER_STYLE[article.gender];
-                return (
-                  <span className={cn("mt-1 px-2.5 py-0.5 rounded-full text-xs font-semibold border", gs.bg, gs.text, gs.border)}>
-                    {article.label}
-                  </span>
-                );
-              })()}
+              <p className="text-2xl font-bold text-brand-950 text-center leading-tight">{article.bare}</p>
             </>
           ) : (
-            <p className="text-3xl font-bold text-brand-950 text-center">{card.word_de}</p>
+            <p className="text-2xl font-bold text-brand-950 text-center leading-tight mt-1">{card.word_de}</p>
           )}
 
-          <p className="text-xs text-brand-300 mt-3">tap to flip</p>
+          <p className="text-xs text-brand-200 mt-1">tap to flip</p>
         </div>
 
-        {/* Back — both translations with styled language badges */}
+        {/* Back */}
         <div
-          className="absolute inset-0 rounded-2xl shadow-lg flex flex-col items-center justify-center p-8 gap-4"
+          className="absolute inset-0 rounded-xl shadow-sm flex flex-col items-center justify-center px-5 gap-2"
           style={{
             backfaceVisibility: "hidden",
             transform: "rotateY(180deg)",
@@ -80,20 +78,19 @@ export function FlashcardItem({ card, flipped, onFlip }: Props) {
             border: "1px solid #312e81",
           }}
         >
-          <div className="flex flex-col items-center gap-3 w-full">
+          <div className="flex items-center justify-center gap-3 w-full">
             <div className="flex items-center gap-2">
               <LangBadge lang="en" />
-              <p className="text-lg font-semibold text-white">{card.translation_en}</p>
+              <p className="text-sm font-semibold text-white">{card.translation_en}</p>
             </div>
-            <div className="w-8 h-px bg-gold-500/40" />
+            <div className="w-px h-4 bg-white/20 shrink-0" />
             <div className="flex items-center gap-2">
               <LangBadge lang="uk" />
-              <p className="text-lg font-semibold text-white">{card.translation_uk}</p>
+              <p className="text-sm font-semibold text-white">{card.translation_uk}</p>
             </div>
           </div>
-
           {card.example_de && (
-            <p className="text-xs text-brand-300 text-center italic">
+            <p className="text-xs text-indigo-300 italic text-center leading-snug line-clamp-2">
               &ldquo;{card.example_de}&rdquo;
             </p>
           )}
