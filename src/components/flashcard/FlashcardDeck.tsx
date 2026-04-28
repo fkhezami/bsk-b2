@@ -15,25 +15,18 @@ export function FlashcardDeck({ flashcards }: Props) {
   const [flipped, setFlipped] = useState(false);
 
   if (flashcards.length === 0) {
-    return <p className="text-slate-500 text-sm">No vocabulary for this lesson.</p>;
+    return <p className="text-brand-300 text-sm">No vocabulary for this lesson.</p>;
   }
 
   const card = flashcards[index];
 
-  const prev = () => {
-    setFlipped(false);
-    setIndex((i) => Math.max(0, i - 1));
-  };
-
-  const next = () => {
-    setFlipped(false);
-    setIndex((i) => Math.min(flashcards.length - 1, i + 1));
-  };
+  const prev = () => { setFlipped(false); setIndex((i) => Math.max(0, i - 1)); };
+  const next = () => { setFlipped(false); setIndex((i) => Math.min(flashcards.length - 1, i + 1)); };
 
   return (
     <div className="flex flex-col items-center gap-6">
-      <p className="text-sm text-slate-500">
-        {index + 1} / {flashcards.length}
+      <p className="text-sm text-brand-400 font-medium">
+        {index + 1} <span className="text-brand-300">/ {flashcards.length}</span>
       </p>
 
       <FlashcardItem card={card} flipped={flipped} onFlip={() => setFlipped((f) => !f)} />
@@ -49,14 +42,19 @@ export function FlashcardDeck({ flashcards }: Props) {
         </Button>
       </div>
 
-      <div className="flex gap-2 flex-wrap justify-center mt-2">
+      {/* Dot navigation */}
+      <div className="flex gap-2 flex-wrap justify-center mt-1">
         {flashcards.map((_, i) => (
           <button
             key={i}
             onClick={() => { setIndex(i); setFlipped(false); }}
-            className={`w-2.5 h-2.5 rounded-full transition-colors ${
-              i === index ? "bg-slate-800" : "bg-slate-300 hover:bg-slate-500"
-            }`}
+            className="transition-all"
+            style={{
+              width: i === index ? "20px" : "8px",
+              height: "8px",
+              borderRadius: "9999px",
+              background: i === index ? "#4f46e5" : "#c7d2fe",
+            }}
           />
         ))}
       </div>

@@ -58,4 +58,14 @@ export interface GeminiGrammarResponse {
   structure?: string;
 }
 
-export type GeminiResponse = GeminiVocabResponse | GeminiGrammarResponse;
+export interface GeminiMixedResponse {
+  type: "mixed";
+  items: GeminiVocabItem[];
+  grammar: {
+    title: string;
+    explanation: string;
+    structure?: string;
+  };
+}
+
+export type GeminiResponse = GeminiVocabResponse | GeminiGrammarResponse | GeminiMixedResponse;

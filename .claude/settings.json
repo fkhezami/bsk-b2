@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Projects/**)",
+      "Bash(gh --version)",
+      "Bash(npm --version)",
+      "Bash(npx --version)",
+      "Bash(npx create-next-app@latest german-classroom --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --no-turbopack --yes)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(winget install *)",
+      "PowerShell(winget install --id GitHub.cli --accept-package-agreements --accept-source-agreements 2>&1)",
+      "WebFetch(domain:openrouter.ai)",
+      "Bash(python -c \"import sys,json; data=json.load\\(sys.stdin\\); print\\(data[0]['text']\\)\")",
+      "Bash(node -e \"require\\('sharp'\\); console.log\\('sharp ok'\\)\")"
+    ],
+    "additionalDirectories": [
+      "c:\\Projects\\german-classroom\\src\\types",
+      "c:\\Projects\\german-classroom\\src\\lib\\supabase",
+      "c:\\Projects\\german-classroom\\src\\lib",
+      "C:\\Projects\\german-classroom\\supabase",
+      "c:\\Projects\\german-classroom"
+    ]
+  }
+}

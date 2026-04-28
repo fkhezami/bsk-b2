@@ -1,61 +1,82 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createHash } from "crypto";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { todayISO } from "@/lib/utils";
+import { extractDateFromFile } from "@/lib/utils";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
+async function getOrCreateCourse(supabase: ReturnType<typeof createAdminClient>, date: string) {
+  const { data: existing } = await supabase
+    .from("courses")
+    .select("id")
+    .eq("date", date)
+    .single();
+
+  if (existing) return existing.id;
+
+  const { data: created, error } = await supabase
+    .from("courses")
+    .insert({ date, status: "draft" })
+    .select("id")
+    .single();
+
+  if (error || !created) throw new Error(`Failed to create course for ${date}: ${error?.message}`);
+  return created.id;
+}
+
 export async function POST(req: NextRequest) {
   const supabase = createAdminClient();
-
   const formData = await req.formData();
   const files = formData.getAll("files") as File[];
-  const dateParam = (formData.get("date") as string | null) ?? todayISO();
 
   if (!files.length) {
     return NextResponse.json({ error: "No files provided" }, { status: 400 });
   }
 
-  // Ensure a draft course exists for this date
-  const { data: existingCourse } = await supabase
-    .from("courses")
-    .select("id")
-    .eq("date", dateParam)
-    .single();
-
-  let courseId: string;
-
-  if (existingCourse) {
-    courseId = existingCourse.id;
-  } else {
-    const { data: newCourse, error: courseError } = await supabase
-      .from("courses")
-      .insert({ date: dateParam, status: "draft" })
-      .select("id")
-      .single();
-
-    if (courseError || !newCourse) {
-      return NextResponse.json({ error: "Failed to create course" }, { status: 500 });
-    }
-    courseId = newCourse.id;
-  }
-
   const uploaded: string[] = [];
   const failed: string[] = [];
+  // Cache course ids so we don't hit the DB on every file
+  const courseIdByDate: Record<string, string> = {};
 
   for (const file of files) {
-    const capturedAt = (formData.get(`captured_at_${file.name}`) as string | null)
-      ?? new Date(file.lastModified || Date.now()).toISOString();
+    const lastModified = parseInt(formData.get(`last_modified_${file.name}`) as string || "0") || Date.now();
+    const date = extractDateFromFile(file.name, lastModified);
+    const capturedAt = new Date(date);
+
+    let courseId: string;
+    try {
+      if (!courseIdByDate[date]) {
+        courseIdByDate[date] = await getOrCreateCourse(supabase, date);
+      }
+      courseId = courseIdByDate[date];
+    } catch {
+      failed.push(file.name);
+      continue;
+    }
 
     const ext = file.name.split(".").pop() ?? "jpg";
-    const storagePath = `${dateParam}/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+    const buffer = Buffer.from(await file.arrayBuffer());
 
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
+    // Deterministic path based on file content — same image always maps to the same path
+    const hash = createHash("sha256").update(buffer).digest("hex").slice(0, 24);
+    const storagePath = `${date}/${hash}.${ext}`;
+
+    // Skip if this exact image was already uploaded (same hash = same file)
+    const { data: existing } = await supabase
+      .from("images")
+      .select("id")
+      .eq("storage_path", storagePath)
+      .maybeSingle();
+
+    if (existing) {
+      uploaded.push(file.name); // treat as success — already there
+      continue;
+    }
 
     const { error: storageError } = await supabase.storage
       .from("course-images")
-      .upload(storagePath, buffer, { contentType: file.type, upsert: false });
+      .upload(storagePath, buffer, { contentType: file.type, upsert: true });
 
     if (storageError) {
       failed.push(file.name);
@@ -65,7 +86,7 @@ export async function POST(req: NextRequest) {
     const { error: dbError } = await supabase.from("images").insert({
       course_id: courseId,
       storage_path: storagePath,
-      captured_at: capturedAt,
+      captured_at: capturedAt.toISOString(),
       processed: false,
       type: "unknown",
     });
@@ -77,5 +98,9 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  return NextResponse.json({ courseId, uploaded, failed });
+  return NextResponse.json({
+    courses: Object.keys(courseIdByDate).length,
+    uploaded,
+    failed,
+  });
 }
