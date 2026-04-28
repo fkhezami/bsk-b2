@@ -22,7 +22,7 @@ export function FlashcardItem({ card, flipped, onFlip }: Props) {
 
   return (
     <div
-      className="w-full max-w-md cursor-pointer"
+      className="w-full max-w-md cursor-pointer px-1"
       style={{ perspective: "1000px" }}
       onClick={onFlip}
       role="button"

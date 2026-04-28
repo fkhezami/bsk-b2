@@ -5,6 +5,7 @@ import Link from "next/link";
 import { NavLinks } from "./NavLinks";
 import { LogoutButton } from "./LogoutButton";
 import { Footer } from "@/components/layout/Footer";
+import { MobileAdminHeader } from "./MobileAdminHeader";
 
 function SummaryRow({ color, label, count }: { color: string; label: string; count: number }) {
   return (
@@ -39,9 +40,13 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const toReview = (draftCourses ?? []).filter((c) => !courseIdsWithPending.has(c.id)).length;
 
   return (
-    <div className="min-h-screen flex" style={{ background: "var(--color-surface)" }}>
-      {/* Sidebar */}
-      <aside className="w-60 flex flex-col shrink-0 py-5" style={{ background: "#0f0e2e" }}>
+    <div className="min-h-screen flex flex-col md:flex-row" style={{ background: "var(--color-surface)" }}>
+
+      {/* Mobile header + drawer */}
+      <MobileAdminHeader email={user.email!} toGenerate={toGenerate ?? 0} toReview={toReview} />
+
+      {/* Sidebar — desktop only */}
+      <aside className="hidden md:flex w-60 flex-col shrink-0 py-5" style={{ background: "#0f0e2e" }}>
 
         {/* Logo → home */}
         <div className="px-4 mb-8">
