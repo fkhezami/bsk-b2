@@ -12,12 +12,17 @@ interface UploadResult {
   status: "success" | "error";
 }
 
+function todayISO() {
+  return new Date().toISOString().slice(0, 10);
+}
+
 export default function UploadPage() {
   const [files, setFiles] = useState<File[]>([]);
   const [dragging, setDragging] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [results, setResults] = useState<UploadResult[]>([]);
   const [done, setDone] = useState(false);
+  const [lectureDate, setLectureDate] = useState(todayISO());
 
   const addFiles = useCallback((incoming: FileList | null) => {
     if (!incoming) return;
@@ -42,6 +47,7 @@ export default function UploadPage() {
     setUploading(true);
 
     const formData = new FormData();
+    formData.append("override_date", lectureDate);
 
     const sorted = [...files].sort((a, b) => a.lastModified - b.lastModified);
     for (const file of sorted) {
@@ -105,8 +111,23 @@ export default function UploadPage() {
       <div className="bg-white rounded-2xl shadow-sm border border-brand-100 p-8 max-w-lg w-full">
         <h1 className="text-2xl font-bold text-brand-950 mb-1">Upload class notes</h1>
         <p className="text-brand-400 text-sm mb-6">
-          Select or drag your photos of today&apos;s notes. Images are grouped by date automatically.
+          Select or drag your photos. All images will be assigned to the lecture date below.
         </p>
+
+        {/* Date picker */}
+        <div className="mb-5">
+          <label className="block text-xs font-semibold text-brand-500 uppercase tracking-widest mb-1.5">
+            Lecture date
+          </label>
+          <input
+            type="date"
+            value={lectureDate}
+            onChange={(e) => setLectureDate(e.target.value)}
+            onClick={(e) => (e.currentTarget as HTMLInputElement).showPicker?.()}
+            style={{ colorScheme: "light" }}
+            className="w-full border border-brand-200 rounded-xl px-4 py-2.5 text-sm text-brand-950 bg-white focus:outline-none focus:ring-2 focus:ring-brand-400 focus:border-transparent cursor-pointer"
+          />
+        </div>
 
         {/* Drop zone */}
         <label

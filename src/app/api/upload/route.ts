@@ -29,6 +29,7 @@ export async function POST(req: NextRequest) {
   const supabase = createAdminClient();
   const formData = await req.formData();
   const files = formData.getAll("files") as File[];
+  const overrideDate = (formData.get("override_date") as string | null) ?? null;
 
   if (!files.length) {
     return NextResponse.json({ error: "No files provided" }, { status: 400 });
@@ -41,7 +42,7 @@ export async function POST(req: NextRequest) {
 
   for (const file of files) {
     const lastModified = parseInt(formData.get(`last_modified_${file.name}`) as string || "0") || Date.now();
-    const date = extractDateFromFile(file.name, lastModified);
+    const date = overrideDate ?? extractDateFromFile(file.name, lastModified);
     const capturedAt = new Date(date);
 
     let courseId: string;
