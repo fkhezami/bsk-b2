@@ -307,8 +307,8 @@ function normaliseExplanation(obj: Record<string, unknown>): void {
 
 // ── Public API ────────────────────────────────────────────────────────────────
 
-export async function analyzeImage(imageBase64: string, mimeType: string): Promise<GeminiResponse> {
-  const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+async function groqVision(imageBase64: string, mimeType: string): Promise<Response> {
+  return fetch("https://api.groq.com/openai/v1/chat/completions", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
@@ -327,6 +327,19 @@ export async function analyzeImage(imageBase64: string, mimeType: string): Promi
       ],
     }),
   });
+}
+
+export async function analyzeImage(imageBase64: string, mimeType: string): Promise<GeminiResponse> {
+  let response = await groqVision(imageBase64, mimeType);
+
+  if (response.status === 429) {
+    const body = await response.text();
+    const m = body.match(/try again in ([\d.]+)s/i);
+    const wait = m ? Math.ceil(parseFloat(m[1]) * 1000) + 500 : 5000;
+    console.warn(`[groq] 429 — retrying after ${wait}ms`);
+    await new Promise((r) => setTimeout(r, wait));
+    response = await groqVision(imageBase64, mimeType);
+  }
 
   if (!response.ok) {
     const err = await response.text();

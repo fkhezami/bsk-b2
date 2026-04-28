@@ -68,7 +68,9 @@ export async function POST(req: NextRequest) {
     error?: string;
   }[] = [];
 
-  for (const image of images) {
+  for (let imgIdx = 0; imgIdx < images.length; imgIdx++) {
+    if (imgIdx > 0) await new Promise((r) => setTimeout(r, 5000));
+    const image = images[imgIdx];
     const { data: fileData, error: downloadError } = await supabase.storage
       .from("course-images")
       .download(image.storage_path);

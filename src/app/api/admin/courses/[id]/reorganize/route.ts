@@ -66,22 +66,41 @@ export async function POST(
   });
 
   if (!res.ok) {
-    return NextResponse.json({ error: `Groq error ${res.status}` }, { status: 500 });
+    const errText = await res.text();
+    console.error("[reorganize] Groq error", res.status, errText);
+    return NextResponse.json({ error: `Groq error ${res.status}: ${errText}` }, { status: 500 });
   }
 
   const data = await res.json();
   const raw: string = data.choices[0].message.content.trim();
+  console.log("[reorganize] raw:", raw.slice(0, 300));
 
-  // Extract JSON from response
-  const start = raw.search(/\{/);
+  // Extract the first balanced {...} block
+  const start = raw.indexOf("{");
   if (start === -1) {
+    console.error("[reorganize] no JSON object in response:", raw.slice(0, 200));
     return NextResponse.json({ error: "No JSON in response" }, { status: 500 });
   }
 
+  let jsonStr = raw.slice(start);
+  // Walk to the matching closing brace
+  let depth = 0, inStr = false, esc = false, end = -1;
+  for (let i = 0; i < jsonStr.length; i++) {
+    const ch = jsonStr[i];
+    if (esc) { esc = false; continue; }
+    if (ch === "\\") { esc = true; continue; }
+    if (ch === '"') { inStr = !inStr; continue; }
+    if (inStr) continue;
+    if (ch === "{") depth++;
+    if (ch === "}") { depth--; if (depth === 0) { end = i; break; } }
+  }
+  if (end !== -1) jsonStr = jsonStr.slice(0, end + 1);
+
   let merged: { title: string; explanation: string; structure: string | null };
   try {
-    merged = JSON.parse(raw.slice(start));
-  } catch {
+    merged = JSON.parse(jsonStr);
+  } catch (e) {
+    console.error("[reorganize] JSON parse failed:", e, jsonStr.slice(0, 300));
     return NextResponse.json({ error: "Failed to parse AI response" }, { status: 500 });
   }
 
