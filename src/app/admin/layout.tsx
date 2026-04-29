@@ -43,7 +43,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     <div className="min-h-screen flex flex-col md:flex-row" style={{ background: "var(--color-surface)" }}>
 
       {/* Mobile header + drawer */}
-      <MobileAdminHeader email={user.email!} toGenerate={toGenerate ?? 0} toReview={toReview} />
+      <MobileAdminHeader email={user.email!} toGenerate={toGenerate ?? 0} draftTotal={draftTotal} toReview={toReview} published={published ?? 0} />
 
       {/* Sidebar — desktop only */}
       <aside className="hidden md:flex w-60 flex-col shrink-0 py-5" style={{ background: "#0f0e2e" }}>

@@ -6,13 +6,27 @@ import Image from "next/image";
 import { Menu, X } from "lucide-react";
 import { NavLinks } from "./NavLinks";
 
+function SummaryRow({ color, label, count }: { color: string; label: string; count: number }) {
+  return (
+    <div className="flex items-center justify-between px-3 py-1.5 rounded-lg" style={{ background: "rgba(255,255,255,0.04)" }}>
+      <div className="flex items-center gap-2">
+        <span className="w-2 h-2 rounded-full shrink-0" style={{ background: color }} />
+        <span className="text-xs text-brand-300">{label}</span>
+      </div>
+      <span className="text-xs font-bold" style={{ color }}>{count}</span>
+    </div>
+  );
+}
+
 interface Props {
   email: string;
   toGenerate: number;
+  draftTotal: number;
   toReview: number;
+  published: number;
 }
 
-export function MobileAdminHeader({ email, toGenerate, toReview }: Props) {
+export function MobileAdminHeader({ email, toGenerate, draftTotal, toReview, published }: Props) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -53,6 +67,14 @@ export function MobileAdminHeader({ email, toGenerate, toReview }: Props) {
           >
             <X className="w-4 h-4" />
           </button>
+        </div>
+
+        {/* Summary stats */}
+        <div className="px-4 mb-6 space-y-1.5">
+          <SummaryRow color="#f59e0b" label="To generate" count={toGenerate} />
+          <SummaryRow color="#94a3b8" label="Draft"       count={draftTotal} />
+          <SummaryRow color="#818cf8" label="To review"   count={toReview} />
+          <SummaryRow color="#34d399" label="Published"   count={published} />
         </div>
 
         <div onClick={() => setOpen(false)} className="flex-1 overflow-y-auto">
