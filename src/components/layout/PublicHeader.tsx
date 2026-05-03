@@ -3,11 +3,12 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Upload, LayoutGrid, GraduationCap } from "lucide-react";
+import { Upload, LayoutGrid, GraduationCap, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
   { href: "/courses", label: "Courses", icon: GraduationCap },
+  { href: "/grammar", label: "Grammar", icon: BookOpen },
   { href: "/upload", label: "Upload Notes", icon: Upload },
 ];
 
