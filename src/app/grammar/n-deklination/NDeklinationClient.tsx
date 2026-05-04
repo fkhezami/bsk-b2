@@ -1431,6 +1431,115 @@ function Chapter9() {
 
 // ─── Main Component ────────────────────────────────────────────────────────────
 
+function ChapterZusammenfassung() {
+  return (
+    <div>
+      <h2 className="text-xl font-bold text-brand-950 mb-1">Zusammenfassung</h2>
+      <p className="text-sm text-brand-400 mb-6">Alle Formen und Muster auf einen Blick</p>
+
+      <InfoBox typ="merke">
+        N-Deklinations-Nomen (maskulin) bekommen in allen Kasus außer dem <strong>Nominativ Singular</strong> die Endung <strong>-(e)n</strong>. Diese Endung gilt für Singular und Plural gleichermaßen.
+      </InfoBox>
+
+      <h3 className="text-base font-semibold text-brand-900 mb-3">Vollständiges Paradigma — 4 Beispiele im Vergleich</h3>
+      <div className="overflow-x-auto rounded-lg border border-brand-100 mb-2">
+        <table className="w-full text-sm border-collapse">
+          <thead>
+            <tr className="bg-brand-950 text-white">
+              <th className="px-3 py-2 text-left text-xs font-medium">Kasus</th>
+              <th className="px-3 py-2 text-left text-xs font-medium">der Held (regelmäßig)</th>
+              <th className="px-3 py-2 text-left text-xs font-medium">der Herr ★</th>
+              <th className="px-3 py-2 text-left text-xs font-medium">der Name ★</th>
+              <th className="px-3 py-2 text-left text-xs font-medium">der Student (-ent)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="bg-white">
+              <td className="px-3 py-2 font-semibold text-brand-600 text-xs">NOM Sg</td>
+              <td className="px-3 py-2 font-mono text-xs">der Held</td>
+              <td className="px-3 py-2 font-mono text-xs">der Herr</td>
+              <td className="px-3 py-2 font-mono text-xs">der Name</td>
+              <td className="px-3 py-2 font-mono text-xs">der Student</td>
+            </tr>
+            <tr className="bg-brand-50">
+              <td className="px-3 py-2 font-semibold text-brand-600 text-xs">AKK Sg</td>
+              <td className="px-3 py-2 font-mono text-xs">den Held<strong className="text-brand-700">en</strong></td>
+              <td className="px-3 py-2 font-mono text-xs">den Her<strong className="text-brand-700">rn</strong></td>
+              <td className="px-3 py-2 font-mono text-xs">den Name<strong className="text-brand-700">n</strong></td>
+              <td className="px-3 py-2 font-mono text-xs">den Student<strong className="text-brand-700">en</strong></td>
+            </tr>
+            <tr className="bg-white">
+              <td className="px-3 py-2 font-semibold text-brand-600 text-xs">DAT Sg</td>
+              <td className="px-3 py-2 font-mono text-xs">dem Held<strong className="text-brand-700">en</strong></td>
+              <td className="px-3 py-2 font-mono text-xs">dem Her<strong className="text-brand-700">rn</strong></td>
+              <td className="px-3 py-2 font-mono text-xs">dem Name<strong className="text-brand-700">n</strong></td>
+              <td className="px-3 py-2 font-mono text-xs">dem Student<strong className="text-brand-700">en</strong></td>
+            </tr>
+            <tr className="bg-brand-50">
+              <td className="px-3 py-2 font-semibold text-brand-600 text-xs">GEN Sg</td>
+              <td className="px-3 py-2 font-mono text-xs">des Held<strong className="text-brand-700">en</strong></td>
+              <td className="px-3 py-2 font-mono text-xs">des Her<strong className="text-brand-700">rn</strong></td>
+              <td className="px-3 py-2 font-mono text-xs">des Name<strong className="text-brand-700">ns</strong></td>
+              <td className="px-3 py-2 font-mono text-xs">des Student<strong className="text-brand-700">en</strong></td>
+            </tr>
+            <tr className="bg-white border-t-2 border-brand-200">
+              <td className="px-3 py-2 font-semibold text-brand-600 text-xs">NOM / AKK Pl</td>
+              <td className="px-3 py-2 font-mono text-xs">die Held<strong className="text-brand-700">en</strong></td>
+              <td className="px-3 py-2 font-mono text-xs">die Her<strong className="text-brand-700">ren</strong></td>
+              <td className="px-3 py-2 font-mono text-xs">die Name<strong className="text-brand-700">n</strong></td>
+              <td className="px-3 py-2 font-mono text-xs">die Student<strong className="text-brand-700">en</strong></td>
+            </tr>
+            <tr className="bg-brand-50">
+              <td className="px-3 py-2 font-semibold text-brand-600 text-xs">DAT Pl</td>
+              <td className="px-3 py-2 font-mono text-xs">den Held<strong className="text-brand-700">en</strong></td>
+              <td className="px-3 py-2 font-mono text-xs">den Her<strong className="text-brand-700">ren</strong></td>
+              <td className="px-3 py-2 font-mono text-xs">den Name<strong className="text-brand-700">n</strong></td>
+              <td className="px-3 py-2 font-mono text-xs">den Student<strong className="text-brand-700">en</strong></td>
+            </tr>
+            <tr className="bg-white">
+              <td className="px-3 py-2 font-semibold text-brand-600 text-xs">GEN Pl</td>
+              <td className="px-3 py-2 font-mono text-xs">der Held<strong className="text-brand-700">en</strong></td>
+              <td className="px-3 py-2 font-mono text-xs">der Her<strong className="text-brand-700">ren</strong></td>
+              <td className="px-3 py-2 font-mono text-xs">der Name<strong className="text-brand-700">n</strong></td>
+              <td className="px-3 py-2 font-mono text-xs">der Student<strong className="text-brand-700">en</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p className="text-xs text-brand-400 mb-6">★ Sonderfall mit abweichender Endung</p>
+
+      <h3 className="text-base font-semibold text-brand-900 mb-3">Erkennungsmuster — wann N-Deklination?</h3>
+      <div className="overflow-x-auto rounded-lg border border-brand-100">
+        <table className="w-full text-sm border-collapse">
+          <thead>
+            <tr className="bg-brand-950 text-white">
+              <th className="px-3 py-2 text-left text-xs font-medium">Merkmal</th>
+              <th className="px-3 py-2 text-left text-xs font-medium">Endung Sg</th>
+              <th className="px-3 py-2 text-left text-xs font-medium">Beispiel</th>
+            </tr>
+          </thead>
+          <tbody>
+            {([
+              ["Maskulin auf -e", "+(e)n", "der Junge → den Jungen · der Kollege → den Kollegen"],
+              ["-ent / -ant / -ist / -at / -and", "+en", "der Student → den Studenten · der Pianist → den Pianisten"],
+              ["Nationalitäten auf -e", "+n", "der Franzose → den Franzosen · der Pole → den Polen"],
+              ["-oge / -raph / -nom (Wissenschaft)", "+en", "der Biologe → den Biologen · der Monarch → den Monarchen"],
+              ["Sonderfall: Herr", "+n (Sg) · +en (Pl)", "den Herrn · die Herren"],
+              ["Sonderfall: Mensch, Name, Buchstabe", "+en / +ns (GEN)", "den Menschen · des Namens · des Buchstabens"],
+            ] as [string, string, string][]).map(([m, e, b], i) => (
+              <tr key={m} className={i % 2 === 0 ? "bg-white" : "bg-brand-50"}>
+                <td className="px-3 py-2 text-xs font-semibold text-brand-700 whitespace-nowrap">{m}</td>
+                <td className="px-3 py-2 font-mono text-xs text-brand-600 whitespace-nowrap">{e}</td>
+                <td className="px-3 py-2 text-xs text-brand-800">{b}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
 const TABS = [
   "1. Einführung",
   "2. Erkennung",
@@ -1440,7 +1549,8 @@ const TABS = [
   "6. Sonderfälle",
   "7. Tipps",
   "8. Wortliste",
-  "9. Übungen",
+  "9. Zusammenfassung",
+  "10. Übungen",
 ];
 
 const CHAPTERS = [
@@ -1452,6 +1562,7 @@ const CHAPTERS = [
   Chapter6,
   Chapter7,
   Chapter8,
+  ChapterZusammenfassung,
   Chapter9,
 ];
 

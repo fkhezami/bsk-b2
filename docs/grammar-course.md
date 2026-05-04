@@ -401,12 +401,57 @@ Each grammar course must include:
 | 6 | Sonderfälle | All exceptions, fully explained with tables |
 | 7 | Tipps & Tricks | ≥5 learning tips, mnemonics, top-10 frequency list |
 | 8 | Wortliste | ≥100 words/forms, searchable, categorised, colour-coded |
-| 9 | Übungen | ≥10 multiple-choice questions covering all aspects |
+| 9 | Zusammenfassung | Comprehensive reference tables with examples (see Section 11) |
+| 10 | Übungen | ≥10 multiple-choice questions covering all aspects |
 
-Adapt chapter names and count to the specific topic — not every topic needs exactly 9 chapters,
-but should cover introduction, recognition, tables, exceptions, word list, and exercises.
+Adapt chapter names and count to the specific topic — not every topic needs exactly these chapters,
+but must cover introduction, recognition, tables, exceptions, word list, summary, and exercises.
 
 Every chapter must contain **at least 5 example sentences** in natural German.
+
+---
+
+## 11. Zusammenfassung Chapter
+
+Every grammar course must include a **Zusammenfassung** chapter placed immediately before the Übungen tab.
+It serves as a one-page cheat sheet that a student can return to without reading the whole course.
+
+### Required contents
+
+1. **`InfoBox typ="merke"`** — 2–3 sentence recap of the core rule(s) for the topic.
+2. **Main reference table** — a comprehensive matrix covering all key forms/combinations with inline examples:
+   - Adjektivdeklination: all 4 cases × 4 genders × 3 declension types (schwach/stark/gemischt), with ★ for strong Gemischt positions
+   - N-Deklination: all cases (NOM–GEN) × representative words (regular, Herr★, Name★), with bolded -(e)n endings
+   - Direkte/Indirekte Fragen: one row per question type (Ja/Nein, each W-word, modal, Perfekt), showing direkte Frage → Einleitewort → indirekte Frage
+   - Konnektoren: one row per semantic group showing a representative Konjunktion / Subjunktion / Konjunktionaladverb side by side
+3. **Secondary table** (optional) — word order comparison, transformation steps, or special sub-cases.
+4. **Closing `InfoBox typ="tipp"`** — the single most important shortcut or mnemonic for the topic.
+
+### Structural pattern
+
+```tsx
+function ChapterZusammenfassung() {
+  return (
+    <div>
+      <h2 className="text-xl font-bold text-brand-950 mb-1">Zusammenfassung</h2>
+      <p className="text-sm text-brand-400 mb-6">Subtitle describing scope</p>
+
+      <InfoBox typ="merke">Core rule recap…</InfoBox>
+
+      <h3 className="text-base font-semibold text-brand-900 mb-3">Main table heading</h3>
+      {/* comprehensive reference table */}
+
+      <h3 className="text-base font-semibold text-brand-900 mb-3 mt-6">Secondary table heading</h3>
+      {/* secondary table if needed */}
+
+      <InfoBox typ="tipp">Key mnemonic or shortcut…</InfoBox>
+    </div>
+  );
+}
+```
+
+Place `ChapterZusammenfassung` in the CHAPTERS array just before the Übungen chapter, and add
+`"N. Zusammenfassung"` to TABS at the same position.
 
 ---
 

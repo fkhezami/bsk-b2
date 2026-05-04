@@ -14,7 +14,25 @@ const topics = [
     href: "/grammar/n-deklination",
     title: "N-Deklination",
     subtitle: "Schwache Deklination",
-    description: "9 Kapitel · Vollständige Tabellen · 177 Nomen · 15 Übungsaufgaben",
+    description: "10 Kapitel · Vollständige Tabellen · 177 Nomen · 15 Übungsaufgaben",
+  },
+  {
+    href: "/grammar/adjektiv-deklination",
+    title: "Adjektivdeklination",
+    subtitle: "Schwach · Stark · Gemischt",
+    description: "11 Kapitel · Vollständige Tabellen · 130 Adjektive · 15 Übungsaufgaben",
+  },
+  {
+    href: "/grammar/direkte-indirekte-fragen",
+    title: "Direkte & Indirekte Fragen",
+    subtitle: "Fragesätze · ob · W-Fragewörter",
+    description: "12 Kapitel · Umwandlungspaare · 110 Einträge · 15 Übungsaufgaben",
+  },
+  {
+    href: "/grammar/konnektoren",
+    title: "Konnektoren",
+    subtitle: "Konjunktionen · Subjunktionen · Konjunktionaladverbien",
+    description: "13 Kapitel · Vollständige Wortstellungsregeln · 102 Konnektoren · 15 Übungsaufgaben",
   },
 ];
 
